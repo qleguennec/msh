@@ -18,9 +18,9 @@ int				main(void)
 {
 	int			ret;
 
-	ZERO(t_vect, buf);
-	ZERO(t_read, st_r);
-	ZERO(t_eval, st_e);
+	BZERO(t_vect, buf);
+	BZERO(t_read, st_r);
+	BZERO(t_eval, st_e);
 	while (42)
 	{
 		msh_prompt();

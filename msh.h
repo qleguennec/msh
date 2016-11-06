@@ -6,14 +6,13 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/10/13 21:30:38 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/10/18 23:20:39 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MSH_H
 # define MSH_H
 
-# define ZERO(t, x)		t x; ft_bzero(&x, sizeof(x));
 # define FD_IN			0
 # include				"libvect/libvect.h"
 
