@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_cmp.c                                          :+:      :+:    :+:   */
+/*   arr_free.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/07 16:32:58 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 21:21:51 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/07 22:06:27 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/07 22:08:47 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include <stdlib.h>
 
-int			env_cmp(void *p1, void *p2)
+void		arr_free(void **a)
 {
-	unsigned char	*s1;
-	unsigned char	*s2;
+	size_t	i;
 
-	s1 = p1;
-	s2 = p2;
-	while (*s1 == *s2 && *(s1 + 1) != '=' && *(s2 + 1) != '=')
-	{
-		s1++;
-		s2++;
-	}
-	return (*s1 - *s2);
+	i = 0;
+	while (a[i])
+		free(a[i++]);
+	free(a);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split.c                                            :+:      :+:    :+:   */
+/*   nsplit.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 15:10:12 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 17:59:00 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/07 20:20:22 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,43 @@
 #include "libft/libft.h"
 #include "malloc.h"
 
-static char		*next_word(char **s, int (*f)(char))
+static char		*next_word(char **s, size_t *n, int (*f)(int))
 {
 	char		*r;
 
-	while (**s && f(**s))
+	while (*n && f(**s))
+	{
+		(*n)--;
 		(*s)++;
+	}
 	r = *s;
-	while (**s && !f(**s))
+	while (*n && !f(**s))
+	{
+		(*n)--;
 		(*s)++;
-	return (r);
+	}
+	return (r == *s ? NULL : r);
 }
 
-char			**split(char *s, int (*f)(char))
+char			**nsplit(char *s, size_t n, int (*f)(int))
 {
 	size_t		count;
-	char		*s1;
-	char		*buf;
+	size_t		n1;
 	char		**ret;
+	char		*buf;
+	char		*s1;
 
 	count = 0;
 	s1 = s;
-	while (*s1 && next_word(&s1, f))
+	n1 = n;
+	while (next_word(&s1, &n1, f))
 		count++;
 	MALLOC(ret, sizeof(*ret) * (count + 1));
-	while (*s)
+	while ((buf = next_word(&s, &n, f)))
 	{
-		buf = next_word(&s, f);
-		MALLOC(*ret, s - buf);
+		MALLOC(*ret, s - buf + 1);
 		ft_memcpy(*ret, buf, s - buf);
+		(*ret)[s - buf] = '\0';
 		ret++;
 	}
 	*ret = NULL;

@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_cmp.c                                          :+:      :+:    :+:   */
+/*   path_concat.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/07 16:32:58 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 21:21:51 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/07 22:37:18 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/07 22:55:22 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
+#include "malloc.h"
 
-int			env_cmp(void *p1, void *p2)
+char			*path_concat(char *a, char *b)
 {
-	unsigned char	*s1;
-	unsigned char	*s2;
+	char		*ret;
+	size_t		alen;
+	size_t		blen;
+	size_t		retlen;
+	int			slash;
 
-	s1 = p1;
-	s2 = p2;
-	while (*s1 == *s2 && *(s1 + 1) != '=' && *(s2 + 1) != '=')
-	{
-		s1++;
-		s2++;
-	}
-	return (*s1 - *s2);
+	alen = ft_strlen(a);
+	blen = ft_strlen(b);
+	slash = !(a[alen - 1] == '/' || b[0] == '/');
+	retlen = alen + blen + slash;
+	MALLOC(ret, retlen + 1);
+	while (*a)
+		*ret++ = *a++;
+	if (slash)
+		*ret++ = '/';
+	while (*b)
+		*ret++ = *b++;
+	*ret = '\0';
+	return (ret - retlen);
 }

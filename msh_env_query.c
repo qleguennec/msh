@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 16:24:07 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 17:48:52 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/07 21:06:31 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,32 @@ static char		*query(char *str, char **fst, char **lst)
 		return (query(str, fst, n));
 }
 
-void			msh_env_query(char *dest, char *qu, char **env, char **env_end)
+size_t			end(char *dest)
+{
+	*dest = '\0';
+	return (0);
+}
+
+size_t			msh_env_query(char *dest, char *qu, char **env, char **env_end)
 {
 	size_t		qlen;
 	size_t		reslen;
 	char		*res;
 
+	if (!(*env && *env_end))
+		return (end(dest));
 	qlen = ft_strlen(qu);
 	res = query(qu, env, env_end);
 	if (!res)
-		ft_dprintf(2, "%s not found in env\n", qu);
+		return (end(dest));
 	while (*res != '=')
 		res++;
-	res++;
-	reslen = ft_strlen(res);
-	if (reslen + 1 > QUERY_BUFSIZ) //todo error
-		return ;
-	ft_strcpy(dest, res + 1);
+	reslen = ft_strlen(++res);
+	if (reslen + 1 > QUERY_BUFSIZ)
+	{
+		WARN(g_warn_oob, 0);
+		return (end(dest));
+	}
+	ft_memcpy(dest, res, reslen + 1);
+	return (reslen);
 }

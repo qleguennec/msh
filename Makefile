@@ -20,12 +20,14 @@ WHITE		=	"\033[0;37m"
 END			=	"\033[0m"
 
 SRC += env_cmp.c
+SRC += path_concat.c
 SRC += iscolon.c
 SRC += main.c
 SRC += msh_env_query.c
 SRC += msh_exit.c
 SRC += msh_prompt.c
-SRC += split.c
+SRC += nsplit.c
+SRC += arr_free.c
 
 LIB += libgnl.a
 LIB += libprintf.a
