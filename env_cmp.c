@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.h                                           :+:      :+:    :+:   */
+/*   env_cmp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/07 17:54:13 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 16:40:32 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/07 16:32:58 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/07 17:52:35 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MALLOC_H
-# define MALLOC_H
+#include "libft/libft.h"
 
-# include <stdlib.h>
+int			env_cmp(void *p1, void *p2)
+{
+	unsigned char	*s1;
+	unsigned char	*s2;
 
-# define MALLOC_F			malloc
-# define MALLOC_ERR(x)		ft_malloc_err(x, __FUNCTION__, __FILE__, __LINE__)
-
-# define MALLOC(p, x)		if (!(p = MALLOC_F(x))) MALLOC_ERR(x)
-# define MALLOC_SIZEOF(p)	MALLOC(p, sizeof(*p))
-
-void						*ft_null(size_t size);
-void						ft_malloc_err
-	(size_t size, const char *func, const char *file, int line);
-
-#endif
+	s1 = p1;
+	s2 = p2;
+	while (*s1 == *s2 && *s1 != '=')
+	{
+		s1++;
+		s2++;
+	}
+	return (*((unsigned char *)s1) - *((unsigned char *)s2));
+}
