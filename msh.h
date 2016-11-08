@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 22:51:42 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/07 23:59:26 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 # include "libvect/libvect.h"
 # include <stdio.h>
 
-# define ERR_EXEC		-1
-# define ERR_FORK		-2
+# define STATUS_NOTF	127
 # define QUERY_BUFSIZ	1024
 
 # define WARN(w,...)		ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)

@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 23:29:25 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/08 00:07:49 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,27 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static int		exec(char *name, char **cmd, char **env)
+static int		fork_exec(char *name, char **cmd, char **env, int *status)
 {
 	pid_t		child;
 	int			ret;
-	int			status;
 
 	if ((child = fork()) < 0)
 	{
 		WARN(g_warn_fork, child);
-		return (ERR_FORK);
+		return (0);
 	}
 	else if (!child)
 		ret = execve(name, cmd, env);
 	else
 	{
-		waitpid(child, &status, 0);
-		return (status);
+		waitpid(child, status, 0);
+		return (1);
 	}
-	return (ret);
+	return (0);
 }
 
-static int		run_path(char **cmd, char **path, char **env)
+static int		run_path(char **cmd, char **path, char **env, int *status)
 {
 	DIR				*dir;
 	char			*name;
@@ -56,34 +55,35 @@ static int		run_path(char **cmd, char **path, char **env)
 			if (!strcmp(cmd[0], ent->d_name))
 			{
 				name = path_concat(*path, *cmd);
-				ret = exec(name, cmd, env);
+				ret = fork_exec(name, cmd, env, status);
 				free(name);
 				closedir(dir);
-				return (ret);
+				return (1);
 			}
 		}
 		closedir(dir);
 		path++;
 	}
-	return (-1);
+	return (0);
 }
 
-static int		run(char **cmd, char **path, char **env)
+static int		run(char **cmd, char **path, char **env, int *status)
 {
 	int				ret;
 
-	if ((ret = exec(*cmd, cmd, env)) > 0)
-		return (ret);
-	if ((ret = run_path(cmd, path, env)) > 0)
-		return (ret);
+	if ((ret = fork_exec(*cmd, cmd, env, status)))
+		return (1);
+	if ((ret = run_path(cmd, path, env, status)))
+		return (1);
 	WARN(g_warn_notf, *cmd);
-	return (127);
+	return (0);
 }
 
 static int		loop(char **env, char **env_end, char **path)
 {
 	int			gnl_ret;
 	int			run_ret;
+	int			status;
 	char		**cmd;
 
 	BZERO(t_vect, buf);
@@ -96,8 +96,10 @@ static int		loop(char **env, char **env_end, char **path)
 			msh_exit(g_read_err);
 		if (!gnl_ret)
 			break ;
+		if (!line.used && write(1, "0 ", 2))
+			continue ;
 		cmd = nsplit(line.data, line.used, &ft_isspace);
-		run_ret = run(cmd, path, env);
+		run_ret = run(cmd, path, env, &status) ? status : STATUS_NOTF;
 		arr_free((void **)cmd);
 		line.used = 0;
 		ft_printf("%d ", run_ret);
