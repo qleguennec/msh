@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 23:59:26 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:41:51 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int						iscolon(int c);
 char					**nsplit(char *s, size_t n, int (*f)(int));
 void					arr_free(void **a);
 char					*path_concat(char *a, char *b);
+char					*query(char *str, char **fst, char **lst);
 
 static const char		*g_warn_oob = "msh: '%s()': too large for buffer\n";
 static const char		*g_warn_notf = "msh: '%s()': '%s' not found\n";

@@ -1,20 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_env_query.c                                    :+:      :+:    :+:   */
+/*   query.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 16:24:07 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/08 12:31:57 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/08 12:39:38 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include "msh.h"
-#include "libprintf/libprintf.h"
-
-static char		*query(char *str, char **fst, char **lst)
+char		*query(char *str, char **fst, char **lst)
 {
 	char	**n;
 	int		cmp;
@@ -41,34 +37,4 @@ static char		*query(char *str, char **fst, char **lst)
 		return (query(str, n, lst));
 	else
 		return (query(str, fst, n));
-}
-
-static size_t	end(char *dest)
-{
-	*dest = '\0';
-	return (0);
-}
-
-size_t			msh_env_query(char *dest, char *qu, char **env, char **env_end)
-{
-	size_t		qlen;
-	size_t		reslen;
-	char		*res;
-
-	if (!(*env && *env_end))
-		return (end(dest));
-	qlen = ft_strlen(qu);
-	res = query(qu, env, env_end);
-	if (!res)
-		return (end(dest));
-	while (*res != '=')
-		res++;
-	reslen = ft_strlen(++res);
-	if (reslen + 1 > QUERY_BUFSIZ)
-	{
-		WARN(g_warn_oob, 0);
-		return (end(dest));
-	}
-	ft_memcpy(dest, res, reslen + 1);
-	return (reslen);
 }
