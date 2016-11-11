@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/11 04:00:22 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/11 21:50:13 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,19 @@ static void	env_unset(t_dict *env, char *key)
 
 static int	env_run(t_dict *env, char **cmd)
 {
-	char	**env_exp;
-	char	*name;
 	int		status;
 
 	if (!*cmd)
 	{
-		env_exp = dict_str_export(env, "=");
-		while (*env_exp)
-			ft_printf("%s\n", env_exp++);
-		ft_arr_free((void **)env_exp);
+		dict_print(env, "=", "\n");
 		return (0);
 	}
-	if (fork_exec(env, *cmd, cmd, &status))
-		return (status);
-	name = get_cmd_path(env, *cmd);
-	if (name && fork_exec(env, name, cmd, &status))
-		return (status);
-	free(name);
-	WARN(g_warn_notf, *cmd);
+	if (!msh_exec(env, cmd, &status))
+	{
+		WARN(g_warn_notf, *cmd);
+		return (1);
+	}
+	dict_free(env);
 	return (0);
 }
 
@@ -52,16 +46,16 @@ int			builtin_env(t_dict *env, char **cmd)
 	t_dict	new;
 
 	dict_str_init(&new, env->used * DICT_GROWTH_FACTOR);
-	dict_dup(&new, env);
-	while (++*cmd)
+	dict_dup(env, &new);
+	while (*++cmd)
 	{
 		if (*cmd[0] != '-')
 			break ;
 		if (!ft_strcmp(*cmd, "-i"))
-			dict_del(&new);
+			dict_clear(&new);
 		if (!ft_strcmp(*cmd, "-u"))
 		{
-			if (!++*cmd)
+			if (!*++cmd)
 				WARN(g_warn_binoarg, "env", "-u");
 			else
 				env_unset(&new, *cmd);

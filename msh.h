@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/11 04:05:42 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/11 04:18:04 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int						iscolon(int c);
 
 int						builtin_cd(t_dict *env, char **cmd);
 int						builtin_echo(t_dict *env, char **cmd);
+int						builtin_env(t_dict *env, char **cmd);
 
 static const char		*g_warn_oob = "msh, '%s()': too large for buffer\n";
 static const char		*g_warn_notf = "msh, '%s()': '%s' not found\n";

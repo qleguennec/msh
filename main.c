@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/11 04:05:14 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/11 21:41:15 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int		builtin_exec(t_dict *env, char **cmd, int *status)
 		b = &builtin_cd;
 	if (!ft_strcmp(*cmd, "echo"))
 		b = &builtin_echo;
+	if (!ft_strcmp(*cmd, "env"))
+		b = &builtin_env;
 	if (!b)
 		return (0);
 	*status = b(env, cmd);
