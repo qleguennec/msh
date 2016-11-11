@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mshenv_update.c                                    :+:      :+:    :+:   */
+/*   msh_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/08 12:34:36 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/08 12:44:01 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/11 04:01:47 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/11 04:05:58 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-#include "libprintf/libprintf.h"
 
-int			env_update(char *key, char *val, char **env, char **env_end)
+int		msh_exec(t_dict *env, char **cmd, int *status)
 {
-	char	*entry;
-	char	*init_key;
-	size_t	len;
-	size_t	len1;
+	char	*name;
 
-	if (!(entry = key, env, env_end))
-	{
-		WARN(g_warn_notf, "key");
-		return (0);
-	}
-	init_key = entry;
-	while (init_key != '=')
-		init_key++;
-	init_key++;
-	len = ft_strlen(init_key);
-	len1 = ft_strlen(key);
-	if (len1 <= len)
+	if (fork_exec(env, *cmd, cmd, status))
+		return (1);
+	name = get_cmd_path(env, *cmd);
+	if (name && fork_exec(env, name, cmd, status))
+		return (1);
+	free(name);
+	return (0);
 }

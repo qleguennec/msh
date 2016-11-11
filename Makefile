@@ -1,14 +1,11 @@
-# Directories
 PROJECT		=	msh
 BINDIR		?=	.
 BUILDDIR	?=	build
 NAME		=	$(BINDIR)/minishell
 
-# Compiler options
 CC			=	clang
-CFLAGS		=	$(addprefix -I,$(INCLUDE)) -Wall -Wextra -Werror -g
+CFLAGS		=	-Wall -Wextra -Werror -g
 
-# Color output
 BLACK		=	"\033[0;30m"
 RED			=	"\033[0;31m"
 GREEN		=	"\033[0;32m"
@@ -19,55 +16,51 @@ CYAN		=	"\033[0;36m"
 WHITE		=	"\033[0;37m"
 END			=	"\033[0m"
 
-SRC += env_cmp.c
-SRC += path_concat.c
-SRC += iscolon.c
-SRC += main.c
-SRC += msh_env_query.c
-SRC += msh_exit.c
-SRC += msh_prompt.c
-SRC += nsplit.c
-SRC += arr_free.c
+PRINT		=	@printf COL$(PROJECT)$(END)'\t'
+PRPROJ		=	$(subst COL, $(BLUE), $(PRINT))
+PRRM		=	$(subst COL, $(CYAN), $(PRINT))
 
-LIB += libgnl.a
-LIB += libprintf.a
-LIB += libvect.a
-LIB += libft.a
-
+SRCEX		=
+SRC			=	$(filter-out $(SRCEX), $(filter %.c, $(shell ls)))
 OBJECTS		=	$(addprefix $(BUILDDIR)/, $(SRC:%.c=%.o))
-LIBRARIES	=	$(addprefix $(BUILDDIR)/, $(LIB)) $(MLX)
-LIBLINK		+=	$(addprefix -l, $(LIB:lib%.a=%))
+
+LIBLINK		=	-ldict -lgnl -lprintf -lvect -lft
+LIBS		=	$(addprefix $(BUILDDIR)/, $(addsuffix .a, $(subst -l, lib, $(LIBLINK))))
 
 all: $(NAME)
 
-$(MLX): $(MLXDIR)
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
-	make -C $(MLXDIR)
-
 $(BUILDDIR)/%.a: %
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
+	$(PRPROJ)
 	BINDIR=$(CURDIR)/$(BUILDDIR) BUILDDIR=$(CURDIR)/$(BUILDDIR) \
-		   make --no-print-directory -C $<
+		make --no-print-directory -C $<
 
 $(BUILDDIR)/%.o: %.c
 	@[ -d $(BUILDDIR) ] || mkdir $(BUILDDIR)
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
+	$(PRPROJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJECTS) $(LIBRARIES)
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
-	@$(CC) $(CFLAGS) -L$(BUILDDIR) $(LIBLINK) $(OBJECTS) $(LIBLINK) -o $(NAME)
+$(NAME): $(OBJECTS) $(LIBS)
+	$(PRPROJ)
+	$(CC) $(CFLAGS) -L$(BUILDDIR) $(LIBLINK) $(OBJECTS) $(LIBLINK) -o $(NAME)
 	@printf "OK\t"$(NAME)'\n'
 
-.PHONY: clean fclean re
+.PHONY: clean sclean fclean re r ex
 
 clean:
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
+	$(PRRM)
+	rm -rf $(BUILDDIR)
+
+sclean:
+	$(PRRM)
 	rm -rf $(OBJECTS)
 
 fclean: clean
-	@printf $(BLUE)$(PROJECT)$(END)'\t'
-	rm -rf $(BUILDDIR)
+	$(PRRM)
 	rm -rf $(NAME)
+
+r: sclean all
+
+ex: r
+	$(NAME)
 
 re: fclean all

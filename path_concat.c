@@ -6,12 +6,12 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 22:37:18 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/07 22:55:22 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/11 00:26:59 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include "malloc.h"
+#include "libft/malloc.h"
 
 char			*path_concat(char *a, char *b)
 {

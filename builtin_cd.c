@@ -3,25 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qle-guen <qle-guen@studhome.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/08 12:28:10 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/08 12:35:43 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/11 02:38:52 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+#include "libprintf/libprintf.h"
+#include <unistd.h>
 
-int			builtin_cd(char **cmd, char **path, char **env, char **env_end)
+char	*get_arg(t_dict *env, char **cmd)
 {
-	char	*dir;
-	char	ans[QUERY_BUFSIZ];
+	t_dict_ent	*home;
 
 	if (cmd[1])
-		dir = cmd[1];
+		return (cmd[1]);
 	else
 	{
-		msh_env_query(ans, "HOME", env, env_end);
-		dir = ans;
+		if (!(home = dict_lookup(env, "HOME")))
+		{
+			WARN(g_warn_noenv, "HOME");
+			return (NULL);
+		}
+		return (home->val.data);
 	}
+}
+
+int		builtin_cd(t_dict *env, char **cmd)
+{
+	char		*name;
+
+	if (!(name = get_arg(env, cmd)))
+		return (1);
+	if (access(name, X_OK) == -1)
+	{
+		WARN(g_warn_deny, name);
+		return (1);
+	}
+	if (chdir(name) == -1)
+	{
+		WARN(g_warn_chdir, 0);
+		return (1);
+	}
+	dict_str_set(env, "PWD", name);
+	return (0);
 }
