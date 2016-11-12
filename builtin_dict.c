@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_prompt.c                                       :+:      :+:    :+:   */
+/*   builtin_dict.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/13 21:12:51 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 00:58:33 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/11 23:18:18 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/11 23:27:31 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include "libprintf/libprintf.h"
 
-void			msh_prompt(t_dict *env)
+int		builtin_dict(t_dict *env, char **cmd)
 {
-	t_dict_ent	*pwd;
-	t_dict_ent	*user;
-
-	pwd = dict_lookup(env, "PWD");
-	user = dict_lookup(env, "USER");
-	if (user)
-		ft_printf("(%s) ", user->val.data);
-	if (pwd)
-		ft_printf("%s ", pwd->val.data);
-	ft_printf("$> ");
+	cmd++;
+	if (!*cmd)
+	{
+		ft_printf("used: %lu/%lu\ndel: %lu/%lu\n"
+			, env->used, env->total, env->del, env->total);
+		return (0);
+	}
+	if (!ft_strcmp(*cmd, "used"))
+		ft_printf("used: %lu/%lu\n", env->used, env->total);
+	if (!ft_strcmp(*cmd, "del"))
+		ft_printf("del: %lu/%lu\n", env->del, env->total);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/11 21:41:15 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 00:42:24 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,20 @@ static int		builtin_exec(t_dict *env, char **cmd, int *status)
 	int			(*b)(t_dict *, char **);
 
 	b = NULL;
-	if (!ft_strcmp(*cmd, "cd"))
+	if (!b && !ft_strcmp(*cmd, "cd"))
 		b = &builtin_cd;
-	if (!ft_strcmp(*cmd, "echo"))
+	if (!b && !ft_strcmp(*cmd, "echo"))
 		b = &builtin_echo;
-	if (!ft_strcmp(*cmd, "env"))
+	if (!b && !ft_strcmp(*cmd, "env"))
 		b = &builtin_env;
+	if (!b && !ft_strcmp(*cmd, "dict"))
+		b = &builtin_dict;
+	if (!b && !ft_strcmp(*cmd, "setenv"))
+		b = &builtin_setenv;
+	if (!b && !ft_strcmp(*cmd, "unsetenv"))
+		b = &builtin_unsetenv;
+	if (!b && !ft_strcmp(*cmd, "clearenv"))
+		b = &builtin_clearenv;
 	if (!b)
 		return (0);
 	*status = b(env, cmd);
@@ -55,7 +63,7 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 
 	while (42)
 	{
-		msh_prompt();
+		msh_prompt(env);
 		if ((gnl_ret = get_next_line(0, buf, line)) == -1)
 			msh_exit(g_read_err);
 		if (!gnl_ret)

@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/11 21:50:13 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 01:07:06 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int			builtin_env(t_dict *env, char **cmd)
 {
 	t_dict	new;
 
-	dict_str_init(&new, env->used * DICT_GROWTH_FACTOR);
+	dict_str_init(&new, env->total);
 	dict_dup(env, &new);
 	while (*++cmd)
 	{
@@ -56,7 +56,10 @@ int			builtin_env(t_dict *env, char **cmd)
 		if (!ft_strcmp(*cmd, "-u"))
 		{
 			if (!*++cmd)
-				WARN(g_warn_binoarg, "env", "-u");
+			{
+				WARN(g_warn_binoarg, "-u");
+				return (1);
+			}
 			else
 				env_unset(&new, *cmd);
 		}
