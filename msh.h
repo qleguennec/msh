@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 19:21:56 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:31:46 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define WARN(w,...)		ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
 
 void					msh_exit(const char *format, ...);
-void					msh_prompt(t_dict *env);
+void					msh_prompt(t_dict *env, int run_ret);
 int						msh_exec(t_dict *env, char **cmd, int *status);
 
 char					*get_cmd_path(t_dict *env, char *cmd);

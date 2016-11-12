@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 13:31:19 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:25:25 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-char	*get_arg(t_dict *env, char **cmd)
+char	*cd_get_arg(t_dict *env, char **cmd)
 {
 	t_dict_ent	*home;
 
@@ -33,7 +33,7 @@ char	*get_arg(t_dict *env, char **cmd)
 	}
 }
 
-int		set_pwd(t_dict *env)
+int		cd_set_pwd(t_dict *env)
 {
 	char	buf[1024];
 
@@ -51,7 +51,7 @@ int		builtin_cd(t_dict *env, char **cmd)
 	char		*name;
 	struct stat	st;
 
-	if (!(name = get_arg(env, cmd)))
+	if (!(name = cd_get_arg(env, cmd)))
 		return (1);
 	if (stat(name, &st) == -1)
 	{
@@ -68,5 +68,5 @@ int		builtin_cd(t_dict *env, char **cmd)
 		WARN(g_warn_chdir, 0);
 		return (1);
 	}
-	return (set_pwd(env));
+	return (cd_set_pwd(env));
 }

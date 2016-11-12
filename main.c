@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 19:12:28 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:33:04 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 	int			status;
 	char		**cmd;
 
+	run_ret = 0;
 	while (42)
 	{
-		msh_prompt(env);
+		msh_prompt(env, run_ret);
 		if ((gnl_ret = get_next_line(0, buf, line)) == -1)
 			msh_exit(g_read_err);
 		if (!gnl_ret)
@@ -76,7 +77,6 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 		run_ret = run(env, cmd, &status) ? status : STATUS_NOTF;
 		ft_arr_free((void **)cmd);
 		line->used = 0;
-		ft_printf("%d ", run_ret);
 	}
 	return (0);
 }
