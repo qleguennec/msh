@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:03:58 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:21:56 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define STATUS_NOTF	127
 # define QUERY_BUFSIZ	1024
 
-# define WARN(w,...)	ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
+# define WARN(w,...)		ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
 
 void					msh_exit(const char *format, ...);
 void					msh_prompt(t_dict *env);

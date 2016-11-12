@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:04:00 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 13:31:19 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,19 @@ char	*get_arg(t_dict *env, char **cmd)
 	}
 }
 
+int		set_pwd(t_dict *env)
+{
+	char	buf[1024];
+
+	if (getcwd(buf, sizeof(buf)) == NULL)
+	{
+		WARN(g_warn_oob, 0);
+		return (1);
+	}
+	dict_str_set(env, "PWD", buf);
+	return (0);
+}
+
 int		builtin_cd(t_dict *env, char **cmd)
 {
 	char		*name;
@@ -55,6 +68,5 @@ int		builtin_cd(t_dict *env, char **cmd)
 		WARN(g_warn_chdir, 0);
 		return (1);
 	}
-	dict_str_set(env, "PWD", name);
-	return (0);
+	return (set_pwd(env));
 }

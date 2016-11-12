@@ -6,12 +6,12 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:20:12 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 19:12:28 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-#include "malloc.h"
+#include "libft/malloc.h"
 #include "libft/libft.h"
 #include "libgnl/libgnl.h"
 #include "libprintf/libprintf.h"
