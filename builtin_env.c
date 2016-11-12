@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:49:22 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 01:57:23 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	env_run(t_dict *env, char **cmd)
 	ret = 0;
 	if (!*cmd)
 		dict_print(env, "=", "\n");
-	if (!msh_exec(env, cmd, &status))
+	else if (!msh_exec(env, cmd, &status))
 	{
 		WARN(g_warn_notf, *cmd);
 		ret = 1;
