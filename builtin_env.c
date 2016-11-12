@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:07:06 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 01:49:22 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,18 @@ static void	env_unset(t_dict *env, char *key)
 static int	env_run(t_dict *env, char **cmd)
 {
 	int		status;
+	int		ret;
 
+	ret = 0;
 	if (!*cmd)
-	{
 		dict_print(env, "=", "\n");
-		return (0);
-	}
 	if (!msh_exec(env, cmd, &status))
 	{
 		WARN(g_warn_notf, *cmd);
-		return (1);
+		ret = 1;
 	}
 	dict_free(env);
-	return (0);
+	return (ret);
 }
 
 int			builtin_env(t_dict *env, char **cmd)
