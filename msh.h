@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 19:31:46 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 23:40:40 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int						msh_exec(t_dict *env, char **cmd, int *status);
 
 char					*get_cmd_path(t_dict *env, char *cmd);
 char					*path_concat(char *a, char *b);
-int						fork_exec(t_dict *env, char *name, char **cmd, int *status);
+int						fork_exec(char **env_exp, char *name, char **cmd);
 int						iscolon(int c);
 
 int						builtin_cd(t_dict *env, char **cmd);
@@ -46,8 +46,6 @@ static const char		*g_warn_notf = "msh, '%s()': '%s' not found\n";
 static const char		*g_warn_deny = "msh, '%s()': cannot access '%s', denied\n";
 static const char		*g_warn_noenv = "msh, '%s()': '$%s' not set\n";
 
-static const char		*g_warn_exec = "msh, '%s()': execve failed with status %d\n";
-static const char		*g_warn_fork = "msh, '%s()': fork failed\n";
 static const char		*g_warn_chdir = "msh, '%s()': chdir failed\n";
 static const char		*g_warn_binoarg = "msh, '%s()': option requires an argument -- '%s'\n";
 

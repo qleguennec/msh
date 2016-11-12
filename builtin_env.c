@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 19:36:16 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 21:45:10 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,30 @@ static int	env_exec(t_dict *env, char **cmd)
 	return (1);
 }
 
-static int	env_opt(t_dict *env, char ***cmd)
+static int	env_opt_unset(t_dict *env, char ***cmd)
 {
 	int		i;
 
+	i = 0;
+	while (**cmd
+		&& (!i || (*cmd)[1])
+		&& ***cmd != '-'
+		&& !ft_strstr(**cmd, "="))
+	{
+		dict_del(env, **cmd);
+		(*cmd)++;
+		i++;
+	}
+	if (!i)
+	{
+		WARN(g_warn_binoarg, "-u");
+		return (0);
+	}
+	return (1);
+}
+
+static int	env_opt(t_dict *env, char ***cmd)
+{
 	if ((**cmd)[1] == 'i')
 	{
 		(*cmd)++;
@@ -40,18 +60,7 @@ static int	env_opt(t_dict *env, char ***cmd)
 	else if ((**cmd)[1] == 'u')
 	{
 		(*cmd)++;
-		i = 0;
-		while (**cmd && ***cmd != '-' && !ft_strstr(**cmd, "=") && ++i)
-		{
-			dict_del(env, **cmd);
-			(*cmd)++;
-		}
-		if (!i)
-		{
-			WARN(g_warn_binoarg, "-u");
-			return (0);
-		}
-		return (1);
+		return (env_opt_unset(env, cmd));
 	}
 	(*cmd)++;
 	return (1);
@@ -64,7 +73,7 @@ static int	env_run(t_dict *env, char **cmd)
 		if (!env_opt(env, &cmd))
 			return (1);
 	}
-	while (*cmd && dict_str_import(env, *cmd, "="))
+	while (*cmd && dict_str_import(env, *cmd, "=", &dict_str_set))
 		cmd++;
 	return (!env_exec(env, cmd));
 }

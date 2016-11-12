@@ -6,29 +6,17 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:02:00 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/12 23:53:52 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include "libprintf/libprintf.h"
 #include <unistd.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-static int	child_exec(t_dict *env, char *name, char **cmd)
-{
-	char	**env_exp;
-	int		ret;
-
-	env_exp = dict_str_export(env, "=");
-	ret = execve(name, cmd, env_exp);
-	free(env_exp);
-	return (ret == -1);
-}
-
-int			is_exec(char *name)
+static int	exec_isx(char *name)
 {
 	struct stat		st;
 
@@ -42,30 +30,14 @@ int			is_exec(char *name)
 	return (1);
 }
 
-int			fork_exec(t_dict *env, char *name, char **cmd, int *status)
+int			fork_exec(char **env_exp, char *name, char **cmd)
 {
-	int		ret;
 	pid_t	child;
 
-	if (!is_exec(name))
+	if (!exec_isx(name))
 		return (0);
-	ret = 0;
-	if ((child = fork()) == -1)
-	{
-		WARN(g_warn_fork, child);
-		return (0);
-	}
+	child = fork();
 	if (!child)
-		ret = child_exec(env, name, cmd);
-	else
-	{
-		waitpid(child, status, 0);
-		if (ret)
-		{
-			WARN(g_warn_exec, 0);
-			return (0);
-		}
-		return (1);
-	}
+		execve(name, cmd, env_exp);
 	return (1);
 }
