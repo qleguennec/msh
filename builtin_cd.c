@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:34:13 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 19:47:55 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,28 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+char	*cd_hyphen_expand(t_dict *env, char *cmd)
+{
+	size_t		len;
+	t_dict_ent	*oldpwd;
+	t_vect		cmd_new;
+
+	oldpwd = dict_lookup(env, "OLDPWD");
+	if (!oldpwd)
+		return (NULL);
+	len = ft_strlen(cmd);
+	BZERO(cmd_new);
+	vect_add(&cmd_new, oldpwd->val.data, oldpwd->val.used - 1);
+	vect_add(&cmd_new, cmd + 1, len);
+	return (cmd_new.data);
+}
+
 char	*cd_get_arg(t_dict *env, char **cmd)
 {
 	t_dict_ent	*home;
+	char		*buf;
 
-	if (cmd[1])
-		return (cmd[1]);
-	else
+	if (!cmd[1])
 	{
 		if (!(home = dict_lookup(env, "HOME")))
 		{
@@ -31,6 +46,13 @@ char	*cd_get_arg(t_dict *env, char **cmd)
 		}
 		return (home->val.data);
 	}
+	if (*cmd[1] == '-')
+	{
+		buf = cd_hyphen_expand(env, cmd[1]);
+		free(cmd[1]);
+		cmd[1] = buf;
+	}
+	return (cmd[1]);
 }
 
 int		cd_set_pwd(t_dict *env)
