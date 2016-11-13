@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 23:40:40 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 18:52:25 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@
 void					msh_exit(const char *format, ...);
 void					msh_prompt(t_dict *env, int run_ret);
 int						msh_exec(t_dict *env, char **cmd, int *status);
+char					**msh_read(t_dict *env, t_vect *line);
 
 char					*get_cmd_path(t_dict *env, char *cmd);
 char					*path_concat(char *a, char *b);
 int						fork_exec(char **env_exp, char *name, char **cmd);
-int						iscolon(int c);
 
 int						builtin_cd(t_dict *env, char **cmd);
 int						builtin_echo(t_dict *env, char **cmd);
@@ -45,6 +45,7 @@ static const char		*g_warn_oob = "msh, '%s()': too large for buffer\n";
 static const char		*g_warn_notf = "msh, '%s()': '%s' not found\n";
 static const char		*g_warn_deny = "msh, '%s()': cannot access '%s', denied\n";
 static const char		*g_warn_noenv = "msh, '%s()': '$%s' not set\n";
+static const char		*g_warn_exec = "msh, '%s()': exec failed with status %d\n";
 
 static const char		*g_warn_chdir = "msh, '%s()': chdir failed\n";
 static const char		*g_warn_binoarg = "msh, '%s()': option requires an argument -- '%s'\n";

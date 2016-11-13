@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/10 23:51:19 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 01:53:22 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 17:01:00 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char			*get_cmd_path(t_dict *env, char *cmd)
 	path = dict_lookup(env, "PATH");
 	if (!path)
 		return (NULL);
-	str_path = ft_nsplit(path->val.data, path->val.used, &iscolon);
+	str_path = (char **)VSPLIT(path->val, ":");
 	i = 0;
 	ret = NULL;
 	while (str_path[i])

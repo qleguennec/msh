@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 01:16:07 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 17:04:50 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 			continue ;
 		if (!ft_memcmp(line->data, "exit", 4))
 			break ;
-		if (*(cmd = ft_nsplit(line->data, line->used, &ft_isspace)))
+		if (*(cmd = msh_read(env, line)))
 			run_ret = run(env, cmd, &status) ? status : STATUS_NOTF;
 		ft_arr_free((void **)cmd);
 		line->used = 0;
