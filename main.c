@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 21:46:25 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 01:16:07 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,12 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 			msh_exit(g_read_err);
 		if (!gnl_ret)
 			break ;
-		if (!line->used && write(1, "0 ", 2))
+		if (!line->used)
 			continue ;
 		if (!ft_memcmp(line->data, "exit", 4))
 			break ;
-		cmd = ft_nsplit(line->data, line->used, &ft_isspace);
-		run_ret = run(env, cmd, &status) ? status : STATUS_NOTF;
+		if (*(cmd = ft_nsplit(line->data, line->used, &ft_isspace)))
+			run_ret = run(env, cmd, &status) ? status : STATUS_NOTF;
 		ft_arr_free((void **)cmd);
 		line->used = 0;
 	}
@@ -86,6 +86,7 @@ int				main(int argc, char **argv, char **environ)
 	t_dict		env;
 	t_vect		buf;
 	t_vect		line;
+	int			ret;
 
 	(void)argc;
 	(void)argv;
@@ -94,9 +95,9 @@ int				main(int argc, char **argv, char **environ)
 		dict_str_import(&env, *environ++, "=", &dict_str_add);
 	BZERO(buf);
 	BZERO(line);
-	loop(&env, &buf, &line);
+	ret = loop(&env, &buf, &line);
 	free(buf.data);
 	free(line.data);
 	dict_free(&env);
-	return (0);
+	return (ret);
 }
