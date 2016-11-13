@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 21:45:10 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 20:03:57 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ static int	env_opt(t_dict *env, char ***cmd)
 		(*cmd)++;
 		return (env_opt_unset(env, cmd));
 	}
-	(*cmd)++;
-	return (1);
+	WARN(g_warn_unkopt, (**cmd)[1]);
+	return (0);
 }
 
 static int	env_run(t_dict *env, char **cmd)

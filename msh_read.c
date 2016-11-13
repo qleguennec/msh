@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:46:34 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 19:18:22 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ char	*read_tilde_expand(t_dict *env, char *cmd)
 	t_dict_ent	*home;
 	t_vect		cmd_new;
 
-	home = dict_lookup(env, "HOME");
-	if (!home)
+	if (!(home = dict_lookup(env, "HOME")))
 		return (NULL);
 	len = ft_strlen(cmd);
 	BZERO(cmd_new);
@@ -41,7 +40,8 @@ char	**msh_read(t_dict *env, t_vect *line)
 	{
 		if (*cmd[i] == '~')
 		{
-			buf = read_tilde_expand(env, cmd[i]);
+			if (!(buf = read_tilde_expand(env, cmd[i])))
+				break ;
 			free(cmd[i]);
 			cmd[i] = buf;
 		}

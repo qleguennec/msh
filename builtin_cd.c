@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:47:55 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 19:29:25 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-char	*cd_hyphen_expand(t_dict *env, char *cmd)
-{
-	size_t		len;
-	t_dict_ent	*oldpwd;
-	t_vect		cmd_new;
-
-	oldpwd = dict_lookup(env, "OLDPWD");
-	if (!oldpwd)
-		return (NULL);
-	len = ft_strlen(cmd);
-	BZERO(cmd_new);
-	vect_add(&cmd_new, oldpwd->val.data, oldpwd->val.used - 1);
-	vect_add(&cmd_new, cmd + 1, len);
-	return (cmd_new.data);
-}
-
 char	*cd_get_arg(t_dict *env, char **cmd)
 {
 	t_dict_ent	*home;
-	char		*buf;
+	t_dict_ent	*oldpwd;
 
 	if (!cmd[1])
 	{
@@ -48,9 +32,9 @@ char	*cd_get_arg(t_dict *env, char **cmd)
 	}
 	if (*cmd[1] == '-')
 	{
-		buf = cd_hyphen_expand(env, cmd[1]);
+		oldpwd = dict_lookup(env, "OLDPWD");
 		free(cmd[1]);
-		cmd[1] = buf;
+		cmd[1] = ft_strdup(oldpwd->val.data);
 	}
 	return (cmd[1]);
 }

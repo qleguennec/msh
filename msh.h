@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:47:45 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/13 19:46:34 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ static const char		*g_warn_exec = "msh, '%s()': exec failed with status %d\n";
 
 static const char		*g_warn_chdir = "msh, '%s()': chdir failed\n";
 static const char		*g_warn_binoarg = "msh, '%s()': option requires an argument -- '%s'\n";
+static const char		*g_warn_unkopt = "msh, '%s()': unknown option -- '%c'\n";
 
 #endif
