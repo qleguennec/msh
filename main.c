@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 16:47:01 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 17:17:29 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,10 @@ static int		loop_exit(char **cmd)
 	if (!*cmd[1])
 		return (2);
 	i = -1;
-	while (cmd[1][++i])
+	if (!STRONLY(cmd[1], DIGIT))
 	{
-		if (!ft_isdigit(cmd[1][i]))
-		{
-			WARN(W_NUMARG, cmd[1]);
-			return (255);
-		}
+		WARN(W_NUMARG, cmd[1]);
+		return (255);
 	}
 	ret = ft_atoi(cmd[1]);
 	ft_arr_free((void **)cmd);
@@ -118,7 +115,8 @@ int				main(int argc, char **argv, char **environ)
 	(void)argv;
 	dict_str_init(&env, 16);
 	while (*environ)
-		dict_str_import(&env, *environ++, "=", &dict_str_set);
+		dict_str_import(&env, *environ++, "=", &dict_str_add);
+	msh_env(&env);
 	BZERO(buf);
 	BZERO(line);
 	signal(SIGINT, &sighandle_int);

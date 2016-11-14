@@ -1,37 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_status.c                                       :+:      :+:    :+:   */
+/*   msh_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/14 14:05:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 17:07:12 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/14 17:07:24 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/14 17:19:31 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include "libprintf/libprintf.h"
-#include <sys/types.h>
 
-void		msh_status(t_dict *env, int run_ret, int status)
+void		msh_env(t_dict *env)
 {
-	int		st;
-	char	buf[20];
+	int			shlvl_int;
+	t_dict_ent	*shlvl;
 
-	if (!run_ret)
-		st = STATUS_NOTF;
+	if (!(shlvl = dict_lookup(env, "SHLVL")))
+		dict_str_import(env, "SHLVL=1", "=", &dict_str_add);
+	else if (shlvl->val.used == 1 || !VONLY(shlvl->val, DIGIT))
+	{
+		shlvl->val.used = 0;
+		vect_addstr(&shlvl->val, "1");
+	}
 	else
 	{
-		if (WIFEXITED(status))
-			st = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			st = WTERMSIG(status);
-		else if (WIFSTOPPED(status))
-			st = WSTOPSIG(status);
-		else
-			st = 0;
+		shlvl_int = ft_atoi(shlvl->val.data);
+		shlvl->val.used = 0;
+		vect_fmt(&shlvl->val, "%d", ++shlvl_int);
 	}
-	ft_sprintf(buf, "?=%d", st);
-	dict_str_import(env, buf, "=", &dict_str_set);
 }

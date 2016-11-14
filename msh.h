@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 15:18:59 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 17:17:14 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int						msh_exec(t_dict *env, char **cmd, int *status);
 void					msh_exit(const char *format, ...);
 void					msh_prompt(t_dict *env);
 void					msh_status(t_dict *env, int run_ret, int status);
+void					msh_env(t_dict *env);
 
 char					*get_cmd_path(t_dict *env, char *cmd);
 char					*path_concat(char *a, char *b);
