@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 16:09:18 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 16:47:01 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int				main(int argc, char **argv, char **environ)
 	(void)argv;
 	dict_str_init(&env, 16);
 	while (*environ)
-		dict_str_import(&env, *environ++, "=", &dict_str_add);
+		dict_str_import(&env, *environ++, "=", &dict_str_set);
 	BZERO(buf);
 	BZERO(line);
 	signal(SIGINT, &sighandle_int);
