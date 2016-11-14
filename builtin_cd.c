@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:29:25 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 15:20:06 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*cd_get_arg(t_dict *env, char **cmd)
 	{
 		if (!(home = dict_lookup(env, "HOME")))
 		{
-			WARN(g_warn_noenv, "HOME");
+			WARN(W_NOENV, "HOME");
 			return (NULL);
 		}
 		return (home->val.data);
@@ -46,7 +46,7 @@ int		cd_set_pwd(t_dict *env)
 
 	if (getcwd(buf, sizeof(buf)) == NULL)
 	{
-		WARN(g_warn_oob, 0);
+		WARN(W_OOB, 0);
 		return (1);
 	}
 	if (!(pwd = dict_lookup(env, "PWD")))
@@ -68,17 +68,17 @@ int		builtin_cd(t_dict *env, char **cmd)
 		return (1);
 	if (stat(name, &st) == -1)
 	{
-		WARN(g_warn_notf, name);
+		WARN(W_NOTF, name);
 		return (1);
 	}
 	if (access(name, X_OK) == -1)
 	{
-		WARN(g_warn_deny, name);
+		WARN(W_DENY, name);
 		return (1);
 	}
 	if (chdir(name) == -1)
 	{
-		WARN(g_warn_chdir, 0);
+		WARN(W_CHDIR, 0);
 		return (1);
 	}
 	return (cd_set_pwd(env));

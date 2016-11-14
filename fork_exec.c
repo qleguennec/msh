@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:34:36 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 13:44:57 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	exec_isx(char *name)
 		return (0);
 	if (access(name, X_OK) == -1)
 	{
-		WARN(g_warn_deny, name);
+		WARN(W_DENY, name);
 		return (0);
 	}
 	return (1);
@@ -33,12 +33,10 @@ static int	exec_isx(char *name)
 
 int			fork_exec(char **env_exp, char *name, char **cmd)
 {
-	pid_t	child;
-
 	if (!exec_isx(name))
 		return (0);
-	child = fork();
-	if (!child)
+	g_child = fork();
+	if (!g_child)
 	{
 		if (execve(name, cmd, env_exp) == -1)
 			return (0);

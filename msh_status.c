@@ -1,24 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_exit.c                                         :+:      :+:    :+:   */
+/*   msh_status.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/03 14:57:38 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 15:23:37 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/14 14:05:21 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/14 14:28:09 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "msh.h"
 #include "libprintf/libprintf.h"
-#include <stdlib.h>
-#include <stdarg.h>
+#include <sys/types.h>
 
-void		msh_exit(const char *format, ...)
+void		msh_status(t_dict *env, int run_ret, int status)
 {
-	va_list	ap;
+	int		st;
+	char	buf[20];
 
-	va_start(ap, format);
-	ft_vdprintf(2, format, ap);
-	exit(1);
+	if (!run_ret)
+		st = STATUS_NOTF;
+	else
+	{
+		if (WIFEXITED(status))
+			st = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			st = WTERMSIG(status);
+		else if (WIFSTOPPED(status))
+			st = WSTOPSIG(status);
+		else
+			st = 0;
+	}
+	ft_sprintf(buf, "?=%d", st);
+	dict_str_import(env, buf, "=", &dict_str_set);
 }

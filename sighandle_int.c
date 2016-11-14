@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_exit.c                                         :+:      :+:    :+:   */
+/*   sighandle_int.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/10/03 14:57:38 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 15:23:37 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/14 13:42:57 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/14 13:44:31 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "msh.h"
 #include "libprintf/libprintf.h"
-#include <stdlib.h>
-#include <stdarg.h>
 
-void		msh_exit(const char *format, ...)
+void		sighandle_int(int signo)
 {
-	va_list	ap;
-
-	va_start(ap, format);
-	ft_vdprintf(2, format, ap);
-	exit(1);
+	(void)signo;
+	if (!g_child)
+	{
+		ft_printf("\n");
+		exit(1);
+	}
 }

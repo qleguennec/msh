@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 20:03:57 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 15:24:58 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	env_exec(t_dict *env, char **cmd)
 		dict_print(env, "=", "\n");
 	else if (!msh_exec(env, cmd, &status))
 	{
-		WARN(g_warn_notf, *cmd);
+		WARN(W_NOTF, *cmd);
 		return (0);
 	}
 	return (1);
@@ -43,7 +43,7 @@ static int	env_opt_unset(t_dict *env, char ***cmd)
 	}
 	if (!i)
 	{
-		WARN(g_warn_binoarg, "-u");
+		WARN(W_BIARG, "-u");
 		return (0);
 	}
 	return (1);
@@ -62,7 +62,7 @@ static int	env_opt(t_dict *env, char ***cmd)
 		(*cmd)++;
 		return (env_opt_unset(env, cmd));
 	}
-	WARN(g_warn_unkopt, (**cmd)[1]);
+	WARN(W_NOOPT, (**cmd)[1]);
 	return (0);
 }
 
@@ -83,6 +83,5 @@ int			builtin_env(t_dict *env, char **cmd)
 	return ((int)dict_fmap(env
 		, DICT_USED
 		, (void *(*)(t_dict *, void *))&env_run
-		, (void *)(cmd + 1))
-	);
+		, (void *)(cmd + 1)));
 }

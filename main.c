@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 17:04:50 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/14 15:39:05 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libgnl/libgnl.h"
 #include "libprintf/libprintf.h"
 #include <dirent.h>
+#include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -44,13 +45,36 @@ static int		builtin_exec(t_dict *env, char **cmd, int *status)
 	return (1);
 }
 
+static int		loop_exit(char **cmd)
+{
+	int			ret;
+	size_t		i;
+
+	if (!*cmd[1])
+		return (2);
+	i = -1;
+	while (cmd[1][++i])
+	{
+		if (!ft_isdigit(cmd[1][i]))
+		{
+			WARN(W_NUMARG, cmd[1]);
+			return (255);
+		}
+	}
+	ret = ft_atoi(cmd[1]);
+	ft_arr_free((void **)cmd);
+	return (ret);
+}
+
 static int		run(t_dict *env, char **cmd, int *status)
 {
+	if (!ft_strcmp(*cmd, "exit"))
+		return (-1);
 	if (builtin_exec(env, cmd, status))
 		return (1);
 	if (msh_exec(env, cmd, status))
 		return (1);
-	WARN(g_warn_notf, *cmd);
+	WARN(W_NOTF, *cmd);
 	return (0);
 }
 
@@ -61,20 +85,22 @@ static int		loop(t_dict *env, t_vect *buf, t_vect *line)
 	int			status;
 	char		**cmd;
 
-	run_ret = 0;
 	while (42)
 	{
-		msh_prompt(env, run_ret);
+		msh_prompt(env);
 		if ((gnl_ret = get_next_line(0, buf, line)) == -1)
-			msh_exit(g_read_err);
+			msh_exit(W_IO);
 		if (!gnl_ret)
 			break ;
 		if (!line->used)
 			continue ;
-		if (!ft_memcmp(line->data, "exit", 4))
-			break ;
 		if (*(cmd = msh_read(env, line)))
-			run_ret = run(env, cmd, &status) ? status : STATUS_NOTF;
+		{
+			if ((run_ret = run(env, cmd, &status)) == -1)
+				return (loop_exit(cmd));
+			else
+				msh_status(env, run_ret, status);
+		}
 		ft_arr_free((void **)cmd);
 		line->used = 0;
 	}
@@ -95,6 +121,7 @@ int				main(int argc, char **argv, char **environ)
 		dict_str_import(&env, *environ++, "=", &dict_str_add);
 	BZERO(buf);
 	BZERO(line);
+	signal(SIGINT, &sighandle_int);
 	ret = loop(&env, &buf, &line);
 	free(buf.data);
 	free(line.data);
