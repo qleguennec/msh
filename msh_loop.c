@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sighandle_int.c                                    :+:      :+:    :+:   */
+/*   msh_loop.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/14 13:42:57 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 15:14:21 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/11/25 14:03:07 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/11/25 14:49:01 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-#include "libprintf/libprintf.h"
-#include <signal.h>
 
-void		sighandle_int(int signo)
+void	msh_loop(void)
 {
-	(void)signo;
-	ft_printf("\n");
-	if (!g_child)
-		msh_prompt(&g_env);
+	int		read_status;
+
+	g_eintr = 0;
+	read_status = msh_read();
+	if (read_status)
+		msh_loop();
 }

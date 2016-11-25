@@ -6,14 +6,14 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 15:26:05 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:14:26 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-#include "libprintf/libprintf.h"
+#include <unistd.h>
 
-char	*read_tilde_expand(t_dict *env, char *cmd)
+static char	*read_tilde_expand(t_dict *env, char *cmd)
 {
 	size_t		len;
 	t_dict_ent	*home;
@@ -28,7 +28,7 @@ char	*read_tilde_expand(t_dict *env, char *cmd)
 	return (cmd_new.data);
 }
 
-char	**msh_read(t_dict *env, t_vect *line)
+static char	**msh_split(t_dict *env, t_vect *line)
 {
 	char	**cmd;
 	char	*buf;
@@ -47,4 +47,31 @@ char	**msh_read(t_dict *env, t_vect *line)
 		}
 	}
 	return (cmd);
+}
+
+int			msh_read(void)
+{
+	char	**cmd;
+	char	c;
+	int		read_ret;
+	int		eval_ret;
+	int		status;
+
+	msh_prompt(&g_env);
+	g_buf.used = 0;
+	while ((read_ret = read(0, &c, 1) == 1) && c != '\n')
+		vect_add(&g_buf, &c, 1);
+	if (read_ret <= 0)
+		return (0);
+	if (!g_buf.used)
+		return (1);
+	if (*(cmd = msh_split(&g_env, &g_buf)))
+	{
+		if ((eval_ret = msh_eval(&g_env, cmd, &status)) == -1)
+			return (0);
+		else
+			msh_status(&g_env, eval_ret, status);
+		ft_arr_free((void **)cmd);
+	}
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 04:01:47 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 14:50:45 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:13:44 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		msh_exec(t_dict *env, char **cmd, int *status)
 		wait(status);
 	else if (fork_exec(env_exp, *cmd, cmd) && (ret = 1))
 		wait(status);
+	g_child = 0;
 	free(name);
 	ft_arr_free((void **)env_exp);
 	return (ret);
