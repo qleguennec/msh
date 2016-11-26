@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 13:46:58 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/26 14:47:29 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define WARN(w,...)	ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
 
 # define LOOKUP(k)		dict_lookup(&g_env, k)
+# define ALOOKUP(k)		dict_lookup(&g_alias, k)
 # define WLOOKUP(e, k)	if (!(e = LOOKUP(k))) WARN(W_NOENV, k)
 # define LOOKUPV(e, k)	((e = LOOKUP(k)) ? (e->val.data) : NULL)
 # define WLOOKUPV(e, k)	{WLOOKUP(e, k); return (e ? ent->val.data : NULL);}
@@ -58,6 +59,7 @@ int						fork_exec(char **env_exp, char *name, char **cmd);
 
 int						g_child;
 t_dict					g_env;
+t_dict					g_alias;
 t_vect					g_buf;
 
 #endif

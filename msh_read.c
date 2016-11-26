@@ -6,12 +6,13 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 14:21:12 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/26 15:00:54 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include <unistd.h>
+#include "msh_alias.h"
 
 static char	*read_tilde_expand(char *cmd)
 {
@@ -28,7 +29,18 @@ static char	*read_tilde_expand(char *cmd)
 	return (cmd_new.data);
 }
 
-static char	**msh_split(t_vect *line)
+static void	alias(char **cmd)
+{
+	t_dict_ent	*alias;
+
+	alias = ALOOKUP(cmd[0]);
+	if (!alias)
+		return ;
+	free(cmd[0]);
+	cmd[0] = ft_strdup(alias->val.data);
+}
+
+static char	**split(t_vect *line)
 {
 	char	**cmd;
 	char	*buf;
@@ -64,8 +76,9 @@ int			msh_read(int *status)
 		return (0);
 	if (!g_buf.used)
 		return (1);
-	if (*(cmd = msh_split(&g_buf)))
+	if (*(cmd = split(&g_buf)))
 	{
+		alias(cmd);
 		if ((eval_ret = msh_eval(cmd, status)) == -1)
 		{
 			ft_arr_free((void **)cmd);
