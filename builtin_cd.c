@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
+/*   By: qle-guen <qle-guen@student.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 16:45:11 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/26 13:56:19 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,28 @@
 
 static char		*get_arg(char **cmd)
 {
-	t_dict_ent	*home;
+	t_dict_ent	*ent;
 
-	if (cmd[1])
-		return (cmd[1]);
-	else
-	{
-		WLOOKUP(home, "HOME");
-		if (!home)
-			return (NULL);
-		return (home->val.data);
-	}
+	if (!cmd[1])
+		WLOOKUPV(ent, "HOME");
+	if (!ft_strcmp(cmd[1], "-"))
+		WLOOKUPV(ent, "OLDPWD");
+	return (cmd[1]);
 }
 
 static int		set_pwd(void)
 {
-	char	buf[1024];
+	char		buf[1024];
+	t_dict_ent	*pwd;
 
 	if (getcwd(buf, sizeof(buf)) == NULL)
 	{
 		WARN(W_OOB, 0);
 		return (1);
 	}
+	pwd = LOOKUP("PWD");
+	if (pwd)
+		SET("OLDPWD", pwd->val.data);
 	SET("PWD", buf);
 	return (0);
 }

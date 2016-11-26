@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 15:52:51 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/26 14:21:12 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ int			msh_read(int *status)
 	if (*(cmd = msh_split(&g_buf)))
 	{
 		if ((eval_ret = msh_eval(cmd, status)) == -1)
+		{
+			ft_arr_free((void **)cmd);
 			return (0);
+		}
 		else
 			msh_status(eval_ret, *status);
 		ft_arr_free((void **)cmd);
