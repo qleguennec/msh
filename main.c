@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 15:00:58 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/26 15:02:54 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ static void		init(char **environ)
 			, (char *)g_alias_def[i], "=", &dict_str_add);
 }
 
+static void		deinit(void)
+{
+	dict_free(&g_env);
+	dict_free(&g_alias);
+	free(g_buf.data);
+}
+
 int				main(int argc, char **argv, char **environ)
 {
 	int			status;
@@ -46,7 +53,6 @@ int				main(int argc, char **argv, char **environ)
 	g_child = 0;
 	while (msh_read(&status))
 		;
-	free(g_buf.data);
-	dict_free(&g_env);
+	deinit();
 	return (status);
 }
