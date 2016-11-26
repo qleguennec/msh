@@ -6,22 +6,22 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:12:51 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 14:17:53 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:50:09 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include "libprintf/libprintf.h"
 
-void			msh_prompt(t_dict *env)
+void			msh_prompt(void)
 {
 	t_dict_ent		*pwd;
 	t_dict_ent		*user;
 	t_dict_ent		*status;
 
-	pwd = dict_lookup(env, "PWD");
-	user = dict_lookup(env, "USER");
-	status = dict_lookup(env, "?");
+	pwd = LOOKUP("PWD");
+	user = LOOKUP("USER");
+	status = LOOKUP("?");
 	if (status)
 		ft_printf("%s ", status->val.data);
 	if (user)

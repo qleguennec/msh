@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 14:05:47 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:46:28 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,39 @@
 # define STATUS_NOTF	127
 # define QUERY_BUFSIZ	1024
 
-# define WARN(w,...)		ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
+# define WARN(w,...)	ft_dprintf(2,w,__FUNCTION__,__VA_ARGS__)
 
-int						msh_eval(t_dict *env, char **cmd, int *status);
-int						msh_exec(t_dict *env, char **cmd, int *status);
-int						msh_read(void);
-void					msh_env(t_dict *env);
+# define LOOKUP(k)		dict_lookup(&g_env, k)
+# define WLOOKUP(e, k)	if (!(e = LOOKUP(k))) WARN(W_NOENV, k)
+# define SET(k, v)		dict_str_set(&g_env, k, v)
+# define DELETE(k)		dict_del(&g_env, k)
+# define IMPORT(k)		dict_str_import(&g_env, k, "=", &dict_str_set)
+# define EXPORT			dict_str_export(&g_env, "=")
+
+int						msh_eval(char **cmd, int *status);
+int						msh_exec(char **cmd, int *status);
+int						msh_read(int *status);
+void					msh_env(void);
 void					msh_exit(const char *format, ...);
 void					msh_loop(void);
-void					msh_prompt(t_dict *env);
-void					msh_status(t_dict *env, int run_ret, int status);
+void					msh_prompt(void);
+void					msh_status(int run_ret, int status);
 
-char					*get_cmd_path(t_dict *env, char *cmd);
-char					*path_concat(char *a, char *b);
-int						fork_exec(char **env_exp, char *name, char **cmd);
-
-int						builtin_cd(t_dict *env, char **cmd);
-int						builtin_echo(t_dict *env, char **cmd);
-int						builtin_env(t_dict *env, char **cmd);
-int						builtin_dict(t_dict *env, char **cmd);
-int						builtin_setenv(t_dict *env, char **cmd);
-int						builtin_unsetenv(t_dict *env, char **cmd);
-int						builtin_clearenv(t_dict *env, char **cmd);
+int						builtin_cd(char **cmd);
+int						builtin_echo(char **cmd);
+int						builtin_env(char **cmd);
+int						builtin_dict(char **cmd);
+int						builtin_setenv(char **cmd);
+int						builtin_unsetenv(char **cmd);
+int						builtin_clearenv(char **cmd);
 
 void					sighandle_int(int signo);
 
+char					*get_cmd_path(char *cmd);
+char					*path_concat(char *a, char *b);
+int						fork_exec(char **env_exp, char *name, char **cmd);
+
 int						g_child;
-int						g_eintr;
 t_dict					g_env;
 t_vect					g_buf;
 

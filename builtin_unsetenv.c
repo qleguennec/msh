@@ -6,15 +6,15 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/12 00:22:47 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 19:39:26 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:01:48 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int		builtin_unsetenv(t_dict *env, char **cmd)
+int		builtin_unsetenv(char **cmd)
 {
 	while (*++cmd)
-		dict_del(env, *cmd);
+		DELETE(*cmd);
 	return (0);
 }

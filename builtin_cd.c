@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@studhome.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 16:12:30 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:45:11 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,59 +16,40 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-char	*cd_get_arg(t_dict *env, char **cmd)
+static char		*get_arg(char **cmd)
 {
 	t_dict_ent	*home;
-	t_dict_ent	*oldpwd;
 
-	if (!cmd[1])
+	if (cmd[1])
+		return (cmd[1]);
+	else
 	{
-		if (!(home = dict_lookup(env, "HOME")))
-		{
-			WARN(W_NOENV, "HOME");
+		WLOOKUP(home, "HOME");
+		if (!home)
 			return (NULL);
-		}
 		return (home->val.data);
 	}
-	if (*cmd[1] == '-')
-	{
-		if (!(oldpwd = dict_lookup(env, "OLDPWD")))
-		{
-			WARN(W_NOENV, "OLDPWD");
-			return (NULL);
-		}
-		free(cmd[1]);
-		cmd[1] = ft_strdup(oldpwd->val.data);
-	}
-	return (cmd[1]);
 }
 
-int		cd_set_pwd(t_dict *env)
+static int		set_pwd(void)
 {
-	char		buf[1024];
-	t_dict_ent	*pwd;
+	char	buf[1024];
 
 	if (getcwd(buf, sizeof(buf)) == NULL)
 	{
 		WARN(W_OOB, 0);
 		return (1);
 	}
-	if (!(pwd = dict_lookup(env, "PWD")))
-	{
-		dict_str_add(env, "PWD", buf);
-		return (0);
-	}
-	dict_str_set(env, "OLDPWD", pwd->val.data);
-	dict_str_set(env, "PWD", buf);
+	SET("PWD", buf);
 	return (0);
 }
 
-int		builtin_cd(t_dict *env, char **cmd)
+int				builtin_cd(char **cmd)
 {
-	char		*name;
-	struct stat	st;
+	char			*name;
+	struct stat		st;
 
-	if (!(name = cd_get_arg(env, cmd)))
+	if (!(name = get_arg(cmd)))
 		return (1);
 	if (stat(name, &st) == -1)
 	{
@@ -85,5 +66,5 @@ int		builtin_cd(t_dict *env, char **cmd)
 		WARN(W_CHDIR, 0);
 		return (1);
 	}
-	return (cd_set_pwd(env));
+	return (set_pwd());
 }

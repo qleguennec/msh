@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 14:05:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/14 17:07:12 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:59:19 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libprintf/libprintf.h"
 #include <sys/types.h>
 
-void		msh_status(t_dict *env, int run_ret, int status)
+void		msh_status(int run_ret, int status)
 {
 	int		st;
 	char	buf[20];
@@ -33,5 +33,5 @@ void		msh_status(t_dict *env, int run_ret, int status)
 			st = 0;
 	}
 	ft_sprintf(buf, "?=%d", st);
-	dict_str_import(env, buf, "=", &dict_str_set);
+	IMPORT(buf);
 }

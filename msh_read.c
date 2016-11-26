@@ -6,20 +6,20 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 15:14:26 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:52:51 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include <unistd.h>
 
-static char	*read_tilde_expand(t_dict *env, char *cmd)
+static char	*read_tilde_expand(char *cmd)
 {
 	size_t		len;
 	t_dict_ent	*home;
 	t_vect		cmd_new;
 
-	if (!(home = dict_lookup(env, "HOME")))
+	if (!(home = LOOKUP("HOME")))
 		return (NULL);
 	len = ft_strlen(cmd);
 	BZERO(cmd_new);
@@ -28,7 +28,7 @@ static char	*read_tilde_expand(t_dict *env, char *cmd)
 	return (cmd_new.data);
 }
 
-static char	**msh_split(t_dict *env, t_vect *line)
+static char	**msh_split(t_vect *line)
 {
 	char	**cmd;
 	char	*buf;
@@ -40,7 +40,7 @@ static char	**msh_split(t_dict *env, t_vect *line)
 	{
 		if (*cmd[i] == '~')
 		{
-			if (!(buf = read_tilde_expand(env, cmd[i])))
+			if (!(buf = read_tilde_expand(cmd[i])))
 				break ;
 			free(cmd[i]);
 			cmd[i] = buf;
@@ -49,15 +49,14 @@ static char	**msh_split(t_dict *env, t_vect *line)
 	return (cmd);
 }
 
-int			msh_read(void)
+int			msh_read(int *status)
 {
 	char	**cmd;
 	char	c;
 	int		read_ret;
 	int		eval_ret;
-	int		status;
 
-	msh_prompt(&g_env);
+	msh_prompt();
 	g_buf.used = 0;
 	while ((read_ret = read(0, &c, 1) == 1) && c != '\n')
 		vect_add(&g_buf, &c, 1);
@@ -65,12 +64,12 @@ int			msh_read(void)
 		return (0);
 	if (!g_buf.used)
 		return (1);
-	if (*(cmd = msh_split(&g_env, &g_buf)))
+	if (*(cmd = msh_split(&g_buf)))
 	{
-		if ((eval_ret = msh_eval(&g_env, cmd, &status)) == -1)
+		if ((eval_ret = msh_eval(cmd, status)) == -1)
 			return (0);
 		else
-			msh_status(&g_env, eval_ret, status);
+			msh_status(eval_ret, *status);
 		ft_arr_free((void **)cmd);
 	}
 	return (1);

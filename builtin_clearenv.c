@@ -6,15 +6,15 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/12 00:26:40 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/12 00:27:41 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 15:22:53 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int		builtin_clearenv(t_dict *d, char **cmd)
+int		builtin_clearenv(char **cmd)
 {
 	(void)cmd;
-	dict_clear(d);
+	dict_clear(&g_env);
 	return (0);
 }

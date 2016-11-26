@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 15:08:17 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:46:37 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,20 @@
 
 int				main(int argc, char **argv, char **environ)
 {
+	int			status;
+
 	(void)argc;
 	(void)argv;
 	dict_str_init(&g_env, 16);
 	while (*environ)
 		dict_str_import(&g_env, *environ++, "=", &dict_str_add);
-	msh_env(&g_env);
+	msh_env();
 	BZERO(g_buf);
 	signal(SIGINT, &sighandle_int);
-	g_eintr = 0;
 	g_child = 0;
-	while (msh_read())
+	while (msh_read(&status))
 		;
 	free(g_buf.data);
 	dict_free(&g_env);
-	return (0);
+	return (status);
 }

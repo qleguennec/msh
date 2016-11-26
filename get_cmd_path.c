@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/10 23:51:19 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/13 17:01:00 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/25 16:46:14 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void		read_dir(DIR *dir, char *path, char *cmd, char **match)
 	closedir(dir);
 }
 
-char			*get_cmd_path(t_dict *env, char *cmd)
+char			*get_cmd_path(char *cmd)
 {
 	DIR			*dir;
 	char		**str_path;
@@ -34,7 +34,7 @@ char			*get_cmd_path(t_dict *env, char *cmd)
 	size_t		i;
 	t_dict_ent	*path;
 
-	path = dict_lookup(env, "PATH");
+	WLOOKUP(path, "PATH");
 	if (!path)
 		return (NULL);
 	str_path = (char **)VSPLIT(path->val, ":");
