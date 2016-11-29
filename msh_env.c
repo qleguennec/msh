@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/14 17:07:24 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 15:52:04 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 21:28:28 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		msh_env(void)
 	t_dict_ent	*shlvl;
 
 	if (!(shlvl = LOOKUP("SHLVL")))
-		dict_str_import(&g_env, "SHLVL=1", "=", &dict_str_add);
+		dict_str_import(&g_env, "SHLVL=1", "=", DICT_IMPORT_ADD);
 	else if (shlvl->val.used == 1 || !VONLY(shlvl->val, DIGIT))
 	{
 		shlvl->val.used = 0;

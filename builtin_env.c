@@ -6,15 +6,16 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 02:42:21 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/25 16:01:05 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 23:46:35 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 #include "libprintf/libprintf.h"
+#include <sys/wait.h>
 #include <unistd.h>
 
-static int	env_exec(char **cmd)
+static int	env_exec(t_vll *cmd)
 {
 	int		status;
 
@@ -28,7 +29,7 @@ static int	env_exec(char **cmd)
 	return (1);
 }
 
-static int	env_opt_unset(char ***cmd)
+static int	env_opt_unset(t_vll **cmd)
 {
 	int		i;
 
@@ -50,7 +51,7 @@ static int	env_opt_unset(char ***cmd)
 	return (1);
 }
 
-static int	env_opt(char ***cmd)
+static int	env_opt(t_vll **cmd)
 {
 	if ((**cmd)[1] == 'i')
 	{
@@ -67,19 +68,19 @@ static int	env_opt(char ***cmd)
 	return (0);
 }
 
-static int	env_run(char **cmd)
+static int	env_run(t_vll *cmd)
 {
 	while (*cmd && **cmd == '-')
 	{
 		if (!env_opt(&cmd))
 			return (1);
 	}
-	while (*cmd && IMPORT(*cmd))
+	while (*cmd && IMPORT_SET(*cmd))
 		cmd++;
 	return (!env_exec(cmd));
 }
 
-int			builtin_env(char **cmd)
+int			builtin_env(t_vll *cmd)
 {
 	int		child;
 	int		status;

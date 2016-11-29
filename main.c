@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 20:58:27 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 15:02:54 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 21:27:37 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ static void		init(char **environ)
 	BZERO(g_buf);
 	dict_str_init(&g_env, 16);
 	while (*environ)
-		dict_str_import(&g_env, *environ++, "=", &dict_str_add);
+		IMPORT_ADD(*environ++);
 	msh_env();
 	dict_str_init(&g_alias, 16);
 	i = -1;
 	while (++i < LEN(g_alias_def))
-		dict_str_import(&g_alias
-			, (char *)g_alias_def[i], "=", &dict_str_add);
+		AL_IMPORT_ADD((char *)g_alias_def[i]);
 }
 
 static void		deinit(void)

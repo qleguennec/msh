@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/13 21:00:15 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 14:47:29 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 21:31:09 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "libvect/libvect.h"
 # include "libdict/libdict.h"
 # include "libprintf/libprintf.h"
+# include "libvll/libvll.h"
 # include <stdio.h>
 
 # define STATUS_NOTF	127
@@ -31,11 +32,15 @@
 # define WLOOKUPV(e, k)	{WLOOKUP(e, k); return (e ? ent->val.data : NULL);}
 # define SET(k, v)		dict_str_set(&g_env, k, v)
 # define DELETE(k)		dict_del(&g_env, k)
-# define IMPORT(k)		dict_str_import(&g_env, k, "=", &dict_str_set)
+# define IMPORT_ADD(k)	dict_str_import(&g_env, k, "=", DICT_IMPORT_SET)
+# define IMPORT_SET(k)	dict_str_import(&g_env, k, "=", DICT_IMPORT_ADD)
 # define EXPORT			dict_str_export(&g_env, "=")
 
-int						msh_eval(char **cmd, int *status);
-int						msh_exec(char **cmd, int *status);
+# define AL_IMPORT_ADD(k)	dict_str_import(&g_alias, k, "=", DICT_IMPORT_SET)
+# define AL_IMPORT_SET(k)	dict_str_import(&g_alias, k, "=", DICT_IMPORT_ADD)
+
+int						msh_eval(t_vll *cmd, int *status);
+int						msh_exec(t_vll *cmd, int *status);
 int						msh_read(int *status);
 void					msh_env(void);
 void					msh_exit(const char *format, ...);
@@ -43,19 +48,19 @@ void					msh_loop(void);
 void					msh_prompt(void);
 void					msh_status(int run_ret, int status);
 
-int						builtin_cd(char **cmd);
-int						builtin_echo(char **cmd);
-int						builtin_env(char **cmd);
-int						builtin_dict(char **cmd);
-int						builtin_setenv(char **cmd);
-int						builtin_unsetenv(char **cmd);
-int						builtin_clearenv(char **cmd);
+int						builtin_cd(t_vll *cmd);
+int						builtin_echo(t_vll *cmd);
+int						builtin_env(t_vll *cmd);
+int						builtin_dict(t_vll *cmd);
+int						builtin_setenv(t_vll *cmd);
+int						builtin_unsetenv(t_vll *cmd);
+int						builtin_clearenv(t_vll *cmd);
 
 void					sighandle_int(int signo);
 
 char					*get_cmd_path(char *cmd);
 char					*path_concat(char *a, char *b);
-int						fork_exec(char **env_exp, char *name, char **cmd);
+int						fork_exec(t_vll *env_exp, char *name, t_vll *cmd);
 
 int						g_child;
 t_dict					g_env;

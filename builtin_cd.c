@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 01:37:05 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 13:56:19 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 23:44:05 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-static char		*get_arg(char **cmd)
-{
-	t_dict_ent	*ent;
-
-	if (!cmd[1])
-		WLOOKUPV(ent, "HOME");
-	if (!ft_strcmp(cmd[1], "-"))
-		WLOOKUPV(ent, "OLDPWD");
-	return (cmd[1]);
-}
 
 static int		set_pwd(void)
 {
@@ -44,13 +33,12 @@ static int		set_pwd(void)
 	return (0);
 }
 
-int				builtin_cd(char **cmd)
+int				builtin_cd(t_vll *cmd)
 {
 	char			*name;
 	struct stat		st;
 
-	if (!(name = get_arg(cmd)))
-		return (1);
+	name = VLL_DATA(cmd->head->next);
 	if (stat(name, &st) == -1)
 	{
 		WARN(W_NOTF, name);

@@ -24,7 +24,7 @@ SRCEX		=
 SRC			=	$(filter-out $(SRCEX), $(filter %.c, $(shell ls)))
 OBJECTS		=	$(addprefix $(BUILDDIR)/, $(SRC:%.c=%.o))
 
-LIBLINK		=	-ldict -lprintf -lvect -lft
+LIBLINK		=	-lvll -ldict -lprintf -lvect -lft
 LIBS		=	$(addprefix $(BUILDDIR)/, $(addsuffix .a, $(subst -l, lib, $(LIBLINK))))
 
 all: $(NAME)

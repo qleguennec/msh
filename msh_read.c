@@ -6,67 +6,52 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 15:25:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/11/26 15:00:54 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/11/28 23:44:44 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-#include <unistd.h>
 #include "msh_alias.h"
+#include <unistd.h>
 
-static char	*read_tilde_expand(char *cmd)
+static t_vect	*expand(t_vect *v, void *null)
 {
-	size_t		len;
-	t_dict_ent	*home;
-	t_vect		cmd_new;
+	t_dict_ent		*home;
+	t_vect			*new;
+	unsigned char	*s;
 
-	if (!(home = LOOKUP("HOME")))
-		return (NULL);
-	len = ft_strlen(cmd);
-	BZERO(cmd_new);
-	vect_add(&cmd_new, home->val.data, home->val.used - 1);
-	vect_add(&cmd_new, cmd + 1, len);
-	return (cmd_new.data);
-}
-
-static void	alias(char **cmd)
-{
-	t_dict_ent	*alias;
-
-	alias = ALOOKUP(cmd[0]);
-	if (!alias)
-		return ;
-	free(cmd[0]);
-	cmd[0] = ft_strdup(alias->val.data);
-}
-
-static char	**split(t_vect *line)
-{
-	char	**cmd;
-	char	*buf;
-	size_t	i;
-
-	cmd = (char **)VSPLIT((*line), WHITESPACE);
-	i = -1;
-	while (cmd[++i])
+	(void)null;
+	s = v->data;
+	if (s[0] == '~')
 	{
-		if (*cmd[i] == '~')
-		{
-			if (!(buf = read_tilde_expand(cmd[i])))
-				break ;
-			free(cmd[i]);
-			cmd[i] = buf;
-		}
+		WLOOKUP(home, "HOME");
+		if (!home)
+			return (NULL);
+		new = vect_new(NULL, home->val.used + v->used - 1);
+		vect_add(new, home->val.data, home->val.used);
+		vect_add(new, v->data + 1, v->used - 1);
+		return (new);
 	}
-	return (cmd);
+	return (NULL);
 }
 
-int			msh_read(int *status)
+static t_vll	*read_expand()
 {
-	char	**cmd;
+	t_vll		*ret;
+
+	ret = VLL_VSPLIT(g_buf, WHITESPACE);
+	vll_vect_map(ret, &expand, NULL);
+	VLL_VLL_SPLIT(ret, ";");
+	return (ret);
+}
+
+int				msh_read(int *status)
+{
 	char	c;
-	int		read_ret;
 	int		eval_ret;
+	int		read_ret;
+	int		ret;
+	t_vll	*cmd;
 
 	msh_prompt();
 	g_buf.used = 0;
@@ -76,17 +61,14 @@ int			msh_read(int *status)
 		return (0);
 	if (!g_buf.used)
 		return (1);
-	if (*(cmd = split(&g_buf)))
+	cmd = read_expand();
+	if ((eval_ret = msh_eval(cmd, status)) == -1)
+		ret = 0;
+	else
 	{
-		alias(cmd);
-		if ((eval_ret = msh_eval(cmd, status)) == -1)
-		{
-			ft_arr_free((void **)cmd);
-			return (0);
-		}
-		else
-			msh_status(eval_ret, *status);
-		ft_arr_free((void **)cmd);
+		ret = 1;
+		msh_status(eval_ret, *status);
 	}
-	return (1);
+	vll_free(cmd);
+	return (ret);
 }
